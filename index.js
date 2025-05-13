@@ -1,122 +1,148 @@
 let formData = document.querySelector(".form");
 let submitButton = document.querySelector(".button");
 let errorMessages = document.querySelectorAll(".error-message");
-let emptyFieldMessage = document.querySelectorAll(".empty-field");
+let emptyFieldMessages = document.querySelectorAll(".empty-field");
 let showPasswordBtn = document.querySelector(".btn");
-let fnFlag, lnFlag, eFlag, pFlag;
-let firstname, lastname, email, password;
-let fnTarget, lnTarget, eTarget, pTarget;
-let field;
+
+let field, firstName, lastName, email, password;
+let fnTarget, lnTarget, emailTarget, pwdTarget;
 
 let nameRegex = /^[a-z]+$/i;
-let emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-let pwdRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+let emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.[a-z]\w{1,2})+$/i;
+let passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-for (let errorMessage of errorMessages) {
-  errorMessage.classList.add("d-none");
-}
-
-for (let message of emptyFieldMessage) {
-  message.classList.add("d-none");
-}
-
-formData.addEventListener("keyup", (e) => {
-  e.preventDefault();
-  field = e.target.dataset.key;
+formData.addEventListener("keyup", (event) => {
+  event.preventDefault();
+  field = event.target.dataset.key;
   switch (field) {
     case "firstName":
-      firstname = e.target.value;
-      fnTarget = e.target;
+      firstName = event.target.value;
+      fnTarget = event.target;
+      emptyFieldMessages[0].classList.add("d-none");
       break;
     case "lastName":
-      lastname = e.target.value;
-      lnTarget = e.target;
+      lastName = event.target.value;
+      lnTarget = event.target;
+      emptyFieldMessages[1].classList.add("d-none");
       break;
     case "email":
-      email = e.target.value;
-      eTarget = e.target;
+      email = event.target.value;
+      emailTarget = event.target;
+      emptyFieldMessages[2].classList.add("d-none");
       break;
     case "password":
-      password = e.target.value;
-      pTarget = e.target;
+      password = event.target.value;
+      pwdTarget = event.target;
+      emptyFieldMessages[3].classList.add("d-none");
       break;
     default:
-      firstname = lastname = email = password = "";
+      firstName = lastName = email = password = "";
       break;
   }
 });
 
-submitButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  console.log(fnTarget, lnTarget, eTarget, pTarget);
-  if (firstname) {
-    emptyFieldMessage[0].classList.add("d-none");
-    if (!nameRegex.test(firstname)) {
-      fnTarget.classList.add("error");
+document
+  .querySelector(".fn-container .input")
+  .addEventListener("focusout", (event) => {
+    event.preventDefault();
+    if (event.target.value.trim() === "") {
+      emptyFieldMessages[0].classList.remove("d-none");
+    }
+  });
+document
+  .querySelector(".ln-container .input")
+  .addEventListener("focusout", (event) => {
+    event.preventDefault();
+    if (event.target.value.trim() === "") {
+      emptyFieldMessages[1].classList.remove("d-none");
+    }
+  });
+document
+  .querySelector(".email-container .input")
+  .addEventListener("focusout", (event) => {
+    event.preventDefault();
+    if (event.target.value.trim() === "") {
+      emptyFieldMessages[2].classList.remove("d-none");
+    }
+  });
+document
+  .querySelector(".pwd-container .input")
+  .addEventListener("focusout", (event) => {
+    event.preventDefault();
+    if (event.target.value.trim() === "") {
+      emptyFieldMessages[3].classList.remove("d-none");
+    }
+  });
+
+submitButton.addEventListener("click", (event) => {
+  event.preventDefault();
+  console.log(firstName, lastName, email, password);
+
+  if (firstName) {
+    if (!nameRegex.test(firstName)) {
       errorMessages[0].classList.remove("d-none");
-      fnFlag = false;
+      fnTarget.classList.add("error");
     } else {
-      errorMessages[0].classList.add("d-none");
       fnTarget.classList.remove("error");
-      fnFlag = true;
+      errorMessages[0].classList.add("d-none");
     }
   } else {
-    //Show empty field message
-    emptyFieldMessage[0].classList.remove("d-none");
+    emptyFieldMessages[0].classList.remove("d-none");
   }
-  if (lastname) {
-    emptyFieldMessage[1].classList.add("d-none");
-    if (!nameRegex.test(lastname)) {
-      lnTarget.classList.add("error");
+
+  if (lastName) {
+    if (!nameRegex.test(lastName)) {
       errorMessages[1].classList.remove("d-none");
-      lnFlag = false;
+      lnTarget.classList.add("error");
     } else {
-      errorMessages[1].classList.add("d-none");
       lnTarget.classList.remove("error");
-      lnFlag = true;
+      errorMessages[1].classList.add("d-none");
     }
   } else {
-    emptyFieldMessage[1].classList.remove("d-none");
+    emptyFieldMessages[1].classList.remove("d-none");
   }
+
   if (email) {
-    emptyFieldMessage[2].classList.add("d-none");
     if (!emailRegex.test(email)) {
-      eTarget.classList.add("error");
       errorMessages[2].classList.remove("d-none");
-      eFlag = false;
+      emailTarget.classList.add("error");
     } else {
+      emailTarget.classList.remove("error");
       errorMessages[2].classList.add("d-none");
-      eTarget.classList.remove("error");
-      eFlag = true;
     }
   } else {
-    emptyFieldMessage[2].classList.remove("d-none");
+    emptyFieldMessages[2].classList.remove("d-none");
   }
+
   if (password) {
-    emptyFieldMessage[3].classList.add("d-none");
-    if (!pwdRegex.test(password)) {
-      pTarget.classList.add("error");
+    if (!passwordRegex.test(password)) {
       errorMessages[3].classList.remove("d-none");
-      pFlag = false;
+      pwdTarget.classList.add("error");
     } else {
+      pwdTarget.classList.remove("error");
       errorMessages[3].classList.add("d-none");
-      pTarget.classList.remove("error");
-      pFlag = true;
     }
   } else {
-    emptyFieldMessage[3].classList.remove("d-none");
-  }
-  if (fnFlag && lnFlag && eFlag && pFlag) {
-    fnTarget.value = lnTarget.value = eTarget.value = pTarget.value = "";
-    window.location.href = "success.html";
+    emptyFieldMessages[3].classList.remove("d-none");
   }
 });
 
-showPasswordBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (pTarget.getAttribute("type") === "text") {
-    pTarget.setAttribute("type", "password");
-  } else {
-    pTarget.setAttribute("type", "text");
+for (let index in errorMessages) {
+  console.log(errorMessages[index]);
+  console.log(emptyFieldMessages[index]);
+  if (errorMessages[index] && errorMessages[index].classList) {
+    errorMessages[index].classList.add("d-none");
+  };
+  if (emptyFieldMessages[index] && emptyFieldMessages[index].classList) {
+    emptyFieldMessages[index].classList.add("d-none");
   }
-});
+}
+
+showPasswordBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (pwdTarget.getAttribute("type") === "text") {
+    pwdTarget.setAttribute("type", "password");
+  } else {
+    pwdTarget.setAttribute("type", "text");
+  }
+})
