@@ -6,6 +6,7 @@ let showPasswordBtn = document.querySelector(".btn");
 
 let field, firstName, lastName, email, password;
 let fnTarget, lnTarget, emailTarget, pwdTarget;
+let fnFlag, lnFlag, eFlag, pwdFlag;
 
 let nameRegex = /^[a-z]+$/i;
 let emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.[a-z]\w{1,2})+$/i;
@@ -82,9 +83,11 @@ submitButton.addEventListener("click", (event) => {
     if (!nameRegex.test(firstName)) {
       errorMessages[0].classList.remove("d-none");
       fnTarget.classList.add("error");
+      fnFlag = false;
     } else {
       fnTarget.classList.remove("error");
       errorMessages[0].classList.add("d-none");
+      fnFlag = true;
     }
   } else {
     emptyFieldMessages[0].classList.remove("d-none");
@@ -94,9 +97,11 @@ submitButton.addEventListener("click", (event) => {
     if (!nameRegex.test(lastName)) {
       errorMessages[1].classList.remove("d-none");
       lnTarget.classList.add("error");
+      lnFlag = false;
     } else {
       lnTarget.classList.remove("error");
       errorMessages[1].classList.add("d-none");
+      lnFlag = true;
     }
   } else {
     emptyFieldMessages[1].classList.remove("d-none");
@@ -106,9 +111,11 @@ submitButton.addEventListener("click", (event) => {
     if (!emailRegex.test(email)) {
       errorMessages[2].classList.remove("d-none");
       emailTarget.classList.add("error");
+      eFlag = false;
     } else {
       emailTarget.classList.remove("error");
       errorMessages[2].classList.add("d-none");
+      eFlag = true;
     }
   } else {
     emptyFieldMessages[2].classList.remove("d-none");
@@ -118,21 +125,26 @@ submitButton.addEventListener("click", (event) => {
     if (!passwordRegex.test(password)) {
       errorMessages[3].classList.remove("d-none");
       pwdTarget.classList.add("error");
+      pwdFlag = false;
     } else {
       pwdTarget.classList.remove("error");
       errorMessages[3].classList.add("d-none");
+      pwdFlag = true;
     }
   } else {
     emptyFieldMessages[3].classList.remove("d-none");
   }
+
+  if (fnFlag && lnFlag && eFlag && pwdFlag) {
+    fnTarget.value = lnTarget.value = emailTarget.value = pwdTarget.value = "";
+    window.location.href = "./success.html";
+  }
 });
 
 for (let index in errorMessages) {
-  console.log(errorMessages[index]);
-  console.log(emptyFieldMessages[index]);
   if (errorMessages[index] && errorMessages[index].classList) {
     errorMessages[index].classList.add("d-none");
-  };
+  }
   if (emptyFieldMessages[index] && emptyFieldMessages[index].classList) {
     emptyFieldMessages[index].classList.add("d-none");
   }
@@ -140,9 +152,13 @@ for (let index in errorMessages) {
 
 showPasswordBtn.addEventListener("click", (event) => {
   event.preventDefault();
+  console.log(pwdTarget);
   if (pwdTarget.getAttribute("type") === "text") {
     pwdTarget.setAttribute("type", "password");
+    showPasswordBtn.innerHTML = `<span class="material-symbols-outlined">visibility</span>`;
+    
   } else {
     pwdTarget.setAttribute("type", "text");
+    showPasswordBtn.innerHTML = `<span class="material-symbols-outlined">visibility_off</span>`;
   }
-})
+});
